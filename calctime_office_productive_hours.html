@@ -3,13 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Time Calculator</title>
+    <title>Office Time Calculator</title>
     <script>
         function calculateOfficeTime() {
             // Get input values
             const startTime = document.getElementById('startTime').value;
             const endTime = document.getElementById('endTime').value;
-            const deductTime = parseInt(document.getElementById('deductTime').value);
+            const morningTeaBreak = parseInt(document.getElementById('morningTeaBreak').value) || 0;
+            const lunchTime = parseInt(document.getElementById('lunchTime').value) || 0;
+            const restTime = parseInt(document.getElementById('restTime').value) || 0;
+            const eveningTeaTime = parseInt(document.getElementById('eveningTeaTime').value) || 0;
+
+            // Calculate the total deduction time
+            const totalDeductionTime = morningTeaBreak + lunchTime + restTime + eveningTeaTime;
 
             // Parse the start and end times into Date objects
             const startDate = new Date(`1970-01-01T${startTime}:00`);
@@ -24,12 +30,12 @@
             // Calculate the total time in minutes
             const totalTimeMinutes = (endDate - startDate) / (1000 * 60);
 
-            // Deduct the specified minutes
-            const finalTimeMinutes = totalTimeMinutes - deductTime;
+            // Deduct the total break time
+            const finalTimeMinutes = totalTimeMinutes - totalDeductionTime;
 
             // Handle cases where the deduction might result in negative time
             if (finalTimeMinutes < 0) {
-                document.getElementById('result').innerText = "Invalid time: Deduction exceeds total time.";
+                document.getElementById('result').innerText = "Invalid time: Breaks exceed total working time.";
                 return false;
             }
 
@@ -49,14 +55,20 @@
     </script>
 </head>
 <body>
-    <h1>Time Calculator</h1>
+    <h1>Office Time Calculator</h1>
     <form onsubmit="return calculateOfficeTime()">
         <label for="startTime">Start Time (HH:MM):</label>
         <input type="time" id="startTime" required><br><br>
         <label for="endTime">End Time (HH:MM):</label>
         <input type="time" id="endTime" required><br><br>
-        <label for="deductTime">Time to Deduct (minutes):</label>
-        <input type="number" id="deductTime" required><br><br>
+        <label for="morningTeaBreak">Morning Tea Break (minutes):</label>
+        <input type="number" id="morningTeaBreak" required><br><br>
+        <label for="lunchTime">Lunch Time (minutes):</label>
+        <input type="number" id="lunchTime" required><br><br>
+        <label for="restTime">Rest Time (minutes):</label>
+        <input type="number" id="restTime" required><br><br>
+        <label for="eveningTeaTime">Evening Tea Time (minutes):</label>
+        <input type="number" id="eveningTeaTime" required><br><br>
         <input type="submit" value="Calculate">
     </form>
     <p>Total time spent in the office:</p>
